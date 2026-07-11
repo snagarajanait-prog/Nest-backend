@@ -24,6 +24,9 @@ npm-debug.log*
 *.njsproj
 *.sln
 
+.env.development
+.env.production
+.env.staging
 # uploaded files (keep the folder, ignore its contents)
 /uploads/*
 !/uploads/.gitkeep

@@ -145,3 +145,46 @@ src/
 ## Still to do (next sessions, in order)
 Cron jobs & queues · Jest unit-test coverage · then the **React + MUI + Redux**
 frontend consuming these APIs.
+
+
+
+Update product (admin) — replace images if provided
+
+Method: PATCH
+URL: http://localhost:3000/api/products/:id
+Headers: Authorization: Bearer <adminToken>
+Body: form-data same as create; include images files if replacing
+
+
+
+
+Upload single image (admin)
+
+Method: POST
+URL: http://localhost:3000/api/products/:id/image
+Headers: Authorization: Bearer <adminToken>
+Body: form-data
+Key: image (File) — single file
+Response: product updated with new image path
+Delete product (admin)
+
+Method: DELETE
+URL: http://localhost:3000/api/products/:id
+Headers: Authorization: Bearer <adminToken>
+
+
+
+Mail (protected + admin)
+
+Send test mail
+Method: POST
+URL: http://localhost:3000/api/mail/test
+Headers:
+Authorization: Bearer <adminToken>
+Content-Type: application/json
+Body (raw JSON):
+{
+"to": "user@example.com",
+"name": "Recipient",
+"template": "welcome" // or "reset-password" or "invoice"
+}
