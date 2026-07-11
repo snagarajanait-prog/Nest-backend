@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#f4f5f7;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
+            <tr>
+              <td style="padding:28px 32px;background:#0f766e;">
+                <h1 style="margin:0;color:#ffffff;font-size:20px;">{{appName}} — Invoice #{{invoiceNo}}</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 32px;">
+                <p style="margin:0 0 18px;color:#374151;">Hi {{customerName}}, thanks for your order. Here's your summary:</p>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th align="left" style="padding:10px;border-bottom:2px solid #e5e7eb;color:#6b7280;font-size:13px;">Item</th>
+                      <th align="center" style="padding:10px;border-bottom:2px solid #e5e7eb;color:#6b7280;font-size:13px;">Qty</th>
+                      <th align="right" style="padding:10px;border-bottom:2px solid #e5e7eb;color:#6b7280;font-size:13px;">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each items}}
+                    <tr>
+                      <td style="padding:10px;border-bottom:1px solid #f3f4f6;color:#111827;">{{this.name}}</td>
+                      <td align="center" style="padding:10px;border-bottom:1px solid #f3f4f6;color:#111827;">{{this.qty}}</td>
+                      <td align="right" style="padding:10px;border-bottom:1px solid #f3f4f6;color:#111827;">₹{{this.price}}</td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="2" align="right" style="padding:12px 10px;font-weight:bold;color:#111827;">Total</td>
+                      <td align="right" style="padding:12px 10px;font-weight:bold;color:#0f766e;">₹{{total}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+                <p style="margin:18px 0 0;color:#6b7280;font-size:13px;">A copy of this invoice is attached as a text file.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#f9fafb;padding:16px 32px;color:#9ca3af;font-size:12px;">
+                © {{year}} {{appName}}. This is a system-generated invoice.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

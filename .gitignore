@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+
+# build output
+/dist
+*.tsbuildinfo
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# coverage / tests
+/coverage
+.nyc_output
+
+# OS
+.DS_Store
+
+# editor
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# uploaded files (keep the folder, ignore its contents)
+/uploads/*
+!/uploads/.gitkeep
+
+# local mongo data (if ever placed in repo)
+/.mongo-data
+
+# NOTE: real secrets should never be committed. The .env.* files here contain
+# placeholder/dev values only, on purpose, because this is a learning project.
