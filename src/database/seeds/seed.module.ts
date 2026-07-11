@@ -6,6 +6,8 @@ import { CONFIG } from '../../common/constants/app.constants';
 import { RolesModule } from '../../modules/roles/roles.module';
 import { UsersModule } from '../../modules/users/users.module';
 import { SeederService } from './seeder.service';
+import { RoleSeederService } from './role-seeder.service';
+import { UserSeederService } from './user-seeder.service';
 
 /** Minimal module that only wires up the DB connection + the seeder. */
 @Module({
@@ -24,6 +26,6 @@ import { SeederService } from './seeder.service';
     RolesModule,
     UsersModule,
   ],
-  providers: [SeederService],
+  providers: [SeederService, RoleSeederService, UserSeederService],
 })
 export class SeedModule {}

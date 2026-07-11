@@ -13,7 +13,28 @@ async function bootstrap(): Promise<void> {
     logger: ['log', 'error', 'warn'],
   });
   try {
-    await appContext.get(SeederService).run();
+    const seeder = appContext.get(SeederService);
+    const target = process.argv[2]?.toLowerCase() ?? 'all';
+
+    switch (target) {
+      case 'roles':
+        await seeder.seedRoles();
+        break;
+      case 'users':
+        await seeder.seedUsers();
+        break;
+      case 'all':
+      case 'seed':
+        await seeder.run();
+        break;
+      default:
+        logger.warn(
+          `Unknown seed target "${target}". Expected: roles, users, all. Running full seed.`,
+        );
+        await seeder.run();
+        break;
+    }
+
     logger.log('Seeding complete ✅');
   } catch (error) {
     logger.error(
