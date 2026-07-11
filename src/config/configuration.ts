@@ -21,10 +21,9 @@ export default () => ({
     pass: process.env.MAIL_PASS ?? '',
     from: process.env.MAIL_FROM ?? 'Nest App <no-reply@nest-app.local>',
     cronTo: process.env.MAIL_CRON_TO ?? '',
-    cronTemplate: (process.env.MAIL_CRON_TEMPLATE as
-      | 'welcome'
-      | 'reset-password'
-      | 'invoice') ?? 'invoice',
+    cronTemplate:
+      (process.env.MAIL_CRON_TEMPLATE as
+        'welcome' | 'reset-password' | 'invoice') ?? 'invoice',
     cronName: process.env.MAIL_CRON_NAME ?? 'Admin',
   },
   redis: {
