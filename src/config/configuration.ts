@@ -20,6 +20,17 @@ export default () => ({
     user: process.env.MAIL_USER ?? '',
     pass: process.env.MAIL_PASS ?? '',
     from: process.env.MAIL_FROM ?? 'Nest App <no-reply@nest-app.local>',
+    cronTo: process.env.MAIL_CRON_TO ?? '',
+    cronTemplate: (process.env.MAIL_CRON_TEMPLATE as
+      | 'welcome'
+      | 'reset-password'
+      | 'invoice') ?? 'invoice',
+    cronName: process.env.MAIL_CRON_NAME ?? 'Admin',
+  },
+  redis: {
+    host: process.env.REDIS_HOST ?? '127.0.0.1',
+    port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
+    password: process.env.REDIS_PASSWORD ?? '',
   },
   seed: {
     adminEmail: process.env.SEED_ADMIN_EMAIL ?? 'admin@example.com',

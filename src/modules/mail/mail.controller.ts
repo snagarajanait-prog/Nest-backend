@@ -1,6 +1,7 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { MailService } from './mail.service';
-import type { MailTemplate } from './mail.service';
+import { MailService, MailTemplate } from './mail.service';
+import { MailQueueService } from './mail-queue.service';
+import type { MailTemplate as MailTemplateType } from './mail.service';
 import { TestMailDto } from './dto/test-mail.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -10,7 +11,10 @@ import { APP, MESSAGES, ROLES } from '../../common/constants/app.constants';
 @Controller('mail')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class MailController {
-  constructor(private readonly mailService: MailService) {}
+  constructor(
+    private readonly mailService: MailService,
+    private readonly mailQueueService: MailQueueService,
+  ) {}
 
   // POST /api/mail/test  (admin) — send any of the templates WITH an attachment.
   @Post('test')
@@ -62,5 +66,55 @@ export class MailController {
     });
 
     return { success: true, message: MESSAGES.MAIL.SENT, data: result };
+  }
+
+  // POST /api/mail/queue  (admin) — enqueue a mail job to be processed by Redis/Bull.
+  @Post('queue')
+  @Roles(ROLES.ADMIN)
+  async queue(@Body() dto: TestMailDto) {
+    const template: MailTemplateType = dto.template ?? 'welcome';
+    const year = new Date().getFullYear();
+    const name = dto.name ?? 'there';
+
+    await this.mailQueueService.enqueueTemplate({
+      to: dto.to,
+      subject: `Queued: ${APP.NAME} ${template}`,
+      template,
+      context: {
+        ...{
+          welcome: { name, appName: APP.NAME, year },
+          'reset-password': {
+            name,
+            appName: APP.NAME,
+            year,
+            resetUrl: 'http://localhost:3000/reset?token=demo-token',
+            expiresIn: '1 hour',
+          },
+          invoice: {
+            customerName: name,
+            appName: APP.NAME,
+            year,
+            invoiceNo: 'INV-1001',
+            items: [
+              { name: 'Wireless Mouse', qty: 1, price: 799.5 },
+              { name: 'Keyboard', qty: 2, price: 999 },
+            ],
+            total: 2797.5,
+          },
+        }[template],
+      },
+      attachments: [
+        {
+          filename: `${template}-queued.txt`,
+          content: `Queued template ${template} from ${APP.NAME}.`,
+        },
+      ],
+    });
+
+    return {
+      success: true,
+      message: 'Mail job enqueued successfully',
+      data: { queued: true },
+    };
   }
 }

@@ -188,3 +188,21 @@ Body (raw JSON):
 "name": "Recipient",
 "template": "welcome" // or "reset-password" or "invoice"
 }
+
+
+lsha swvf qrdg intm
+
+
+redis-cli keys 'bull:mail*'
+net start MongoDB
+
+
+redis-cli keys 'bull:mail*'
+redis-cli llen bull:mail:wait
+redis-cli llen bull:mail:active
+redis-cli llen bull:mail:completed
+redis-cli llen bull:mail:failed
+redis-cli zrange bull:mail:delayed 0 -1
+redis-cli get bull:mail:id
+
+redis-cli monitor

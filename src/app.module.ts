@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bull';
 import { join } from 'path';
 import configuration from './config/configuration';
 import { CONFIG } from './common/constants/app.constants';
@@ -34,8 +35,19 @@ import { MailModule } from './modules/mail/mail.module';
       rootPath: join(process.cwd(), process.env.UPLOAD_DIR ?? 'uploads'),
       serveRoot: '/uploads',
     }),
-    // Enables @Cron scheduling (used later for the cron/queues task).
+    // Enables @Cron scheduling and Redis-backed queues.
     ScheduleModule.forRoot(),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        redis: {
+          host: config.get<string>('redis.host'),
+          port: config.get<number>('redis.port'),
+          password: config.get<string>('redis.password') || undefined,
+        },
+      }),
+    }),
     AuthModule,
     UsersModule,
     RolesModule,
