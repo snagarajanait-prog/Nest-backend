@@ -141,10 +141,14 @@ export class ProductsService {
     const conditions: ProductFilter = { isActive: true };
 
     if (filter.name) {
-      conditions.name = { $regex: filter.name, $options: 'i' };
+      conditions.name = { $regex: this.escapeRegex(filter.name.trim()), $options: 'i' };
     }
     if (filter.category) {
-      conditions.category = { $regex: `^${filter.category}$`, $options: 'i' };
+      const normalizedCategory = filter.category.trim();
+      conditions.category = {
+        $regex: this.buildFuzzyRegex(normalizedCategory),
+        $options: 'i',
+      };
     }
     if (filter.inStock === true) {
       conditions.stock = { $gt: 0 };
@@ -164,6 +168,17 @@ export class ProductsService {
     }
 
     return conditions;
+  }
+
+  private escapeRegex(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  private buildFuzzyRegex(value: string): string {
+    return value
+      .split('')
+      .map((char) => this.escapeRegex(char))
+      .join('.*');
   }
 
   /** Best-effort deletion of uploaded files when a product is removed. */

@@ -194,7 +194,7 @@ lsha swvf qrdg intm
 
 
 redis-cli keys 'bull:mail*'
-net start MongoDB
+net start MongoDB 
 
 
 redis-cli keys 'bull:mail*'
@@ -206,3 +206,5 @@ redis-cli zrange bull:mail:delayed 0 -1
 redis-cli get bull:mail:id
 
 redis-cli monitor
+
+npm install -D eslint @eslint/js typescript-eslint eslint-plugin-prettier eslint-config-prettier globals prettier

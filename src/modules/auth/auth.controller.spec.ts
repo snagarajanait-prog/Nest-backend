@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService, AuthResult } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import type { AuthUser } from '../../common/decorators/current-user.decorator';
 
 const mockAuthService = {
   register: jest.fn(),
@@ -85,17 +86,13 @@ describe('AuthController', () => {
   });
 
   it('should return profile data', () => {
-    const user = {
-      id: 'user-id',
+    const user: AuthUser = {
+      userId: 'user-id',
       email: 'jane@example.com',
-      firstName: 'Jane',
-      lastName: 'Doe',
       role: 'user',
-      phone: '1234567890',
-      isActive: true,
     };
 
-    expect(controller.getProfile(user as any)).toEqual({
+    expect(controller.getProfile(user)).toEqual({
       success: true,
       message: 'User fetched successfully',
       data: user,
