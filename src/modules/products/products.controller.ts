@@ -5,12 +5,14 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Header,
   Param,
   Patch,
   Post,
   Query,
   UploadedFile,
   UploadedFiles,
+  StreamableFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -74,6 +76,17 @@ export class ProductsController {
   async findAll(@Query() filter: FilterProductDto) {
     const data = await this.productsService.findAll(filter);
     return { success: true, message: MESSAGES.PRODUCT.FETCHED, data };
+  }
+
+  // GET /api/products/export/pdf — download the current product listing as PDF.
+  @ApiOperation({ summary: 'Export products as a PDF file' })
+  @ApiResponse({ status: 200, description: 'Product PDF generated successfully.' })
+  @Header('Content-Type', 'application/pdf')
+  @Header('Content-Disposition', 'attachment; filename="products-export.pdf"')
+  @Get('export/pdf')
+  async exportPdf(@Query() filter: FilterProductDto): Promise<StreamableFile> {
+    const pdfBuffer = await this.productsService.exportPdf(filter);
+    return new StreamableFile(pdfBuffer);
   }
 
   // GET /api/products/:id

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { StreamableFile } from '@nestjs/common';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -8,6 +9,7 @@ import { FilterProductDto } from './dto/filter-product.dto';
 const mockProductsService = {
   create: jest.fn(),
   findAll: jest.fn(),
+  exportPdf: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
   addImage: jest.fn(),
@@ -62,6 +64,17 @@ describe('ProductsController', () => {
       data: result,
     });
     expect(mockProductsService.findAll).toHaveBeenCalledWith(filter);
+  });
+
+  it('should export products as pdf', async () => {
+    const filter: FilterProductDto = { category: 'Electronics' };
+    const pdfBuffer = Buffer.from('%PDF-1.4');
+    mockProductsService.exportPdf.mockResolvedValue(pdfBuffer);
+
+    const result = await controller.exportPdf(filter);
+
+    expect(result).toBeInstanceOf(StreamableFile);
+    expect(mockProductsService.exportPdf).toHaveBeenCalledWith(filter);
   });
 
   it('should fetch a product by id', async () => {
