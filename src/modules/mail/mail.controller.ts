@@ -1,4 +1,10 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { MailService, MailTemplate } from './mail.service';
 import { MailQueueService } from './mail-queue.service';
 import type { MailTemplate as MailTemplateType } from './mail.service';
@@ -8,6 +14,8 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { APP, MESSAGES, ROLES } from '../../common/constants/app.constants';
 
+@ApiTags('Mail')
+@ApiBearerAuth('access-token')
 @Controller('mail')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class MailController {
@@ -17,6 +25,8 @@ export class MailController {
   ) {}
 
   // POST /api/mail/test  (admin) — send any of the templates WITH an attachment.
+  @ApiOperation({ summary: 'Send a test email using a template' })
+  @ApiResponse({ status: 200, description: 'Test email sent successfully.' })
   @Post('test')
   @Roles(ROLES.ADMIN)
   async test(@Body() dto: TestMailDto) {
@@ -69,6 +79,8 @@ export class MailController {
   }
 
   // POST /api/mail/queue  (admin) — enqueue a mail job to be processed by Redis/Bull.
+  @ApiOperation({ summary: 'Enqueue a templated email job' })
+  @ApiResponse({ status: 200, description: 'Mail job enqueued successfully.' })
   @Post('queue')
   @Roles(ROLES.ADMIN)
   async queue(@Body() dto: TestMailDto) {
